@@ -20,25 +20,29 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
-    onNavigate('home');
-    setMobileMenuOpen(false);
+    setMobileMenuOpen(false); // Close mobile menu regardless
 
     const targetId = href.replace('#', '');
-    
-    // Allow React to render the home page components if we were on another page
-    setTimeout(() => {
-        const element = document.getElementById(targetId);
-        if (element) {
-            const headerOffset = 80; // Adjust for fixed header height
-            const elementPosition = element.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-    
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: "smooth"
-            });
-        }
-    }, 100);
+
+    if (targetId === 'investor-access') {
+      onNavigate('investor-access');
+      window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top for new page
+    } else {
+      onNavigate('home'); // Navigate to home first for internal section links
+      setTimeout(() => {
+          const element = document.getElementById(targetId);
+          if (element) {
+              const headerOffset = 80; // Adjust for fixed header height
+              const elementPosition = element.getBoundingClientRect().top;
+              const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      
+              window.scrollTo({
+                  top: offsetPosition,
+                  behavior: "smooth"
+              });
+          }
+      }, 100);
+    }
   };
 
   const navLinks = [
@@ -46,6 +50,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
     { label: "Services", href: "#services" },
     { label: "Process", href: "#roadmap" },
     { label: "Partenaires", href: "#ecosystem" },
+    { label: "Accès Investisseur", href: "#investor-access" },
   ];
 
   return (
@@ -71,7 +76,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
         </div>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-10">
+        <div className="hidden">
           {navLinks.map((link) => (
             <a 
               key={link.label}
@@ -84,7 +89,8 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
           ))}
         </div>
 
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden">
+
           <button 
             onClick={() => onNavigate('booking')}
             className="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-full text-sm font-bold transition-all transform hover:scale-105 shadow-xl shadow-primary/20 block"
@@ -95,7 +101,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
 
         {/* Mobile Toggle */}
         <button 
-          className="md:hidden text-slate-900"
+          className="text-slate-900"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
           {mobileMenuOpen ? <X /> : <Menu />}
@@ -104,7 +110,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-white border-b border-slate-200 p-6 flex flex-col gap-6 shadow-2xl">
+        <div className="absolute top-full left-0 w-full bg-white border-b border-slate-200 p-6 flex flex-col gap-6 shadow-2xl">
            {navLinks.map((link) => (
             <a 
               key={link.label}
@@ -115,6 +121,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
               {link.label}
             </a>
           ))}
+
           <button 
             onClick={() => {
                 setMobileMenuOpen(false);

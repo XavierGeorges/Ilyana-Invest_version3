@@ -22,6 +22,8 @@ import { ServiceDetail } from './components/ServiceDetail';
 import { DestinationDetail } from './components/DestinationDetail';
 import { PromoterLP } from './components/PromoterLP';
 import { BookingPage } from './components/BookingPage';
+import { InvestorAccess } from './components/InvestorAccess';
+import { BrunaudAccessPage } from './components/BrunaudAccessPage';
 import { PageType } from './types';
 
 function App() {
@@ -49,6 +51,10 @@ function App() {
         return <PromoterLP onNavigate={setCurrentPage} />;
       case 'booking':
         return <BookingPage onNavigate={setCurrentPage} />;
+      case 'investor-access':
+        return <InvestorAccess onNavigate={setCurrentPage} />;
+      case 'brunaud-access':
+        return <BrunaudAccessPage onNavigate={setCurrentPage} />;
       case 'home':
       default:
         return (
@@ -73,7 +79,7 @@ function App() {
                 <TransmissionNote />
                 <Concierge />
                 <TransitionSection />
-                <StickyBottomBar onNavigate={setCurrentPage} />
+                {currentPage !== 'investor-access' && currentPage !== 'brunaud-access' && <StickyBottomBar onNavigate={setCurrentPage} />} 
             </div>
           </main>
         );
@@ -84,7 +90,7 @@ function App() {
     <div className="min-h-screen bg-background-light overflow-x-hidden flex flex-col justify-between">
       <Header onNavigate={setCurrentPage} />
       {renderContent()}
-      {currentPage !== 'booking' && currentPage !== 'promoter-lp' && <Footer onNavigate={setCurrentPage} showCta={true} />}
+      {currentPage !== 'booking' && currentPage !== 'promoter-lp' && currentPage !== 'investor-access' && currentPage !== 'brunaud-access' && <Footer onNavigate={setCurrentPage} showCta={true} />}
       <GeminiAdvisor onNavigate={setCurrentPage} />
     </div>
   );
